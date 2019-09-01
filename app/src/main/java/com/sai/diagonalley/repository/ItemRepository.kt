@@ -20,16 +20,17 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
      * Function to fetch items from inventory
      *
      * @param useOnlyCache: Boolean flag to decide whether to only use cache or not
+     * @param category: Category filter for items
      *
      * @return list of ItemEntity
      *
      * @see ItemEntity
      */
-    override fun getItems(useOnlyCache: Boolean): Single<List<ItemEntity>> {
+    override fun getItems(useOnlyCache: Boolean, category: String?): Single<List<ItemEntity>> {
         return if (useOnlyCache)
-            getItemsFromDb()
+            getItemsFromDb(category)
         else
-            getItemsFromApi()
+            getItemsFromApi(category)
     }
 
     /**
@@ -45,25 +46,17 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
             = dbModule.getItemDatabase().itemDao().getItemById(id)
 
     /**
-     * Function to fetch items by category
+     * Helper method to fetch items from the API
      *
-     * @param category: Item category
+     * @param category: Category filter for items
      *
      * @return list of ItemEntity
-     *
-     * @see ItemEntity
      */
-    override fun getItemsByCategory(category: String)
-            = dbModule.getItemDatabase().itemDao().getItemsByCategory(category)
-
-    /**
-     * Helper method to fetch items from the API
-     */
-    private fun getItemsFromApi(): Single<List<ItemEntity>> {
+    private fun getItemsFromApi(category: String?): Single<List<ItemEntity>> {
         return Single.fromCallable { apiModule.readInventoryFromFile() }
             .subscribeOn(Schedulers.io())
             .flatMap { jsonString ->
-                val inventory = Gson().fromJson<Inventory>(jsonString, Inventory::class.java)
+                val inventory = Gson().fromJson(jsonString, Inventory::class.java)
                 val itemEntityList = mutableListOf<ItemEntity>()
 
                 for (item in inventory.items) {
@@ -82,15 +75,28 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
                     itemEntityList.add(itemEntity)
                 }
                 dbModule.getItemDatabase().itemDao().insertAllTodos(itemEntityList)
+
+                if (category != null) {
+                    itemEntityList.filter { item -> item.category.equals(category, true) }
+                }
                 Single.just(itemEntityList)
             }
     }
 
     /**
      * Helper method to fetch items from the database
+     *
+     * @param category: Category filter for items
+     *
+     * @return list of item entity
      */
-    private fun getItemsFromDb(): Single<List<ItemEntity>> {
-        return dbModule.getItemDatabase().itemDao()
-            .getItems()
+    private fun getItemsFromDb(category: String?): Single<List<ItemEntity>> {
+        return if (category == null) {
+            dbModule.getItemDatabase().itemDao()
+                .getItems()
+        } else {
+            dbModule.getItemDatabase().itemDao()
+                .getItemsByCategory(category)
+        }
     }
 }
