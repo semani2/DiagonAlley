@@ -1,6 +1,7 @@
 package com.sai.diagonalley.data.db
 
 import androidx.room.*
+import io.reactivex.Completable
 import io.reactivex.Single
 
 @Dao
@@ -13,7 +14,7 @@ interface CategoryDao {
     fun insertAllCategories(categories: List<CategoryEntity>)
 
     @Update
-    fun updateCategory(category: CategoryEntity)
+    fun updateCategories(categories: List<CategoryEntity>)
 
     @Query("DELETE from categories")
     fun deleteAllCategories()

@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     private val compositeDisposable by lazy { CompositeDisposable() }
     private val sharedPreferencesModule: SharedPreferencesModule by inject()
 
+    private var filterDialog: AlertDialog? = null
+
     /* Section - LifeCycle Methods */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +50,11 @@ class MainActivity : AppCompatActivity() {
 
         initRecyclerView()
         initItemClick()
+        initCategoryClickEvent()
         initLiveDataObservers()
 
-        viewmodel.fetchItems()
+        viewmodel.fetchItems(sharedPreferencesModule.getString(SharedPreferencesModule.spFilterKey,
+            SharedPreferencesModule.defaultFilter))
     }
 
     override fun onDestroy() {
@@ -94,34 +98,49 @@ class MainActivity : AppCompatActivity() {
                         itemList.clear()
                         itemList.addAll(livedataWrapper.data!!)
                         itemAdapter.notifyDataSetChanged()
+
+                        item_recycler_view.smoothScrollToPosition(0)
                     }
                 }
             })
 
         viewmodel.categoryLiveData.observe(this,
             Observer<LiveDataWrapper<List<CategoryEntity>, Exception>> { livedataWrapper ->
-            when (livedataWrapper.status) {
-                ResourceStatus.LOADING -> toggleBusy(true)
-
-                ResourceStatus.ERROR -> {
-                    toggleBusy(false)
-                    Timber.e(livedataWrapper.exception, "Error fetching categories")
-                    Toast.makeText(this, "Could not fetch categories, please try again", Toast.LENGTH_SHORT).show()
+                if (livedataWrapper == null) {
+                    return@Observer
                 }
+                when (livedataWrapper.status) {
+                    ResourceStatus.LOADING -> toggleBusy(true)
 
-                ResourceStatus.SUCCESS -> {
-                    toggleBusy(false)
-
-                    if (livedataWrapper.data.isNullOrEmpty()) {
-                        Timber.e("Error fetching categories")
-                        Toast.makeText(this, "Could not fetch categories, please try again", Toast.LENGTH_SHORT).show()
-                        return@Observer
+                    ResourceStatus.ERROR -> {
+                        toggleBusy(false)
+                        Timber.e(livedataWrapper.exception, "Error fetching categories")
+                        Toast.makeText(
+                            this,
+                            "Could not fetch categories, please try again",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
-                    displayFilterDialog(livedataWrapper.data)
+                    ResourceStatus.SUCCESS -> {
+                        toggleBusy(false)
+
+                        if (livedataWrapper.data.isNullOrEmpty()) {
+                            Timber.e("Error fetching categories")
+                            Toast.makeText(
+                                this,
+                                "Could not fetch categories, please try again",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@Observer
+                        }
+
+                        categoryList.clear()
+                        categoryList.addAll(livedataWrapper.data)
+                        displayFilterDialog(categoryList)
+                    }
                 }
-            }
-        })
+            })
     }
 
     /* Section - UI Helpers */
@@ -155,6 +174,33 @@ class MainActivity : AppCompatActivity() {
         compositeDisposable.add(disposable)
     }
 
+    private fun initCategoryClickEvent() {
+        val disposable = categoryAdapter.getClickEvent()
+            .subscribeWith(object: DisposableObserver<List<CategoryEntity>>() {
+                override fun onComplete() {
+                    /* no op */
+                }
+
+                override fun onNext(item: List<CategoryEntity>) {
+                    viewmodel.updateCategories(item)
+                    filterDialog?.dismiss()
+
+                    val category = item.find { it.isSelected }
+                    category?.let {
+                        sharedPreferencesModule.putString(SharedPreferencesModule.spFilterKey, it.type)
+                        viewmodel.fetchItems(it.type)
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    /* no op */
+                }
+
+            })
+
+        compositeDisposable.add(disposable)
+    }
+
     private fun menuFilterClicked() {
         if (categoryList.isNullOrEmpty()) {
             viewmodel.fetchCategories()
@@ -173,10 +219,10 @@ class MainActivity : AppCompatActivity() {
         val categoryListView: ListView = dialogView.findViewById(R.id.filter_list_view)
         categoryListView.adapter = categoryAdapter
 
-        categoryList.addAll(list)
         categoryAdapter.notifyDataSetChanged()
 
-        dialogBuilder.create().show()
+        filterDialog = dialogBuilder.create()
+        filterDialog?.show()
     }
 
     private fun toggleBusy(isBusy: Boolean) {

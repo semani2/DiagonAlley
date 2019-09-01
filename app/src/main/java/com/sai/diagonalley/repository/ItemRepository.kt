@@ -7,6 +7,7 @@ import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.module.ApiModule
 import com.sai.diagonalley.module.DbModule
 import com.sai.diagonalley.module.SharedPreferencesModule
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -79,10 +80,12 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
                 }
                 dbModule.getItemDatabase().itemDao().insertAllTodos(itemEntityList)
 
-                if (category != null) {
-                    itemEntityList.filter { item -> item.category.equals(category, true) }
+                if (category != null && !category.equals("all", true)) {
+                    val filteredList = itemEntityList.filter { it.category == category}
+                    Single.just(filteredList)
+                } else {
+                    Single.just(itemEntityList)
                 }
-                Single.just(itemEntityList)
             }
     }
 
@@ -122,6 +125,12 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
             }
     }
 
+    override fun updateCategory(categories: List<CategoryEntity>): Completable {
+        return Completable.fromCallable {
+            dbModule.getItemDatabase().categoryDao().updateCategories(categories)
+        }
+    }
+
     /**
      * Helper method to fetch categories from the API
      *
@@ -153,7 +162,6 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
                     )
                 )
 
-                dbModule.getItemDatabase().categoryDao().deleteAllCategories()
                 dbModule.getItemDatabase().categoryDao().insertAllCategories(categoryEntityList)
 
                 Single.just(categoryEntityList)

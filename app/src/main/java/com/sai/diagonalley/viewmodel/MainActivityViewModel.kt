@@ -91,6 +91,7 @@ class MainActivityViewModel(private val repository: IItemRepository,
                         data,
                         null
                     )
+                    categoryLiveData.value = null
                 }
 
                 override fun onError(e: Throwable) {
@@ -99,8 +100,17 @@ class MainActivityViewModel(private val repository: IItemRepository,
                         null,
                         Exception(e.localizedMessage)
                     )
+                    categoryLiveData.value = null
                 }
             })
+
+        compositeDisposable.add(disposable)
+    }
+
+    fun updateCategories(categories: List<CategoryEntity>) {
+        val disposable = repository.updateCategory(categories)
+            .subscribeOn(Schedulers.io())
+            .subscribe()
 
         compositeDisposable.add(disposable)
     }
