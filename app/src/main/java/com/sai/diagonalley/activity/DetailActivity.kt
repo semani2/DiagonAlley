@@ -4,9 +4,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -17,12 +15,11 @@ import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.viewmodel.DetailActivityViewModel
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
 import com.sai.diagonalley.viewmodel.livedata.ResourceStatus
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_detail.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : DAActivity() {
 
     companion object {
         val paramItemId = "${DetailActivity::class.java}.param_item_id"
@@ -30,7 +27,6 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private var itemId: String? = null
-    private val compositeDisposable by lazy { CompositeDisposable() }
 
     val viewmodel: DetailActivityViewModel by viewModel()
 
@@ -51,11 +47,6 @@ class DetailActivity : AppCompatActivity() {
 
         initLiveDataObservers()
         viewmodel.fetchItem(itemId!!)
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.dispose()
-        super.onDestroy()
     }
 
     /* Section - Data */

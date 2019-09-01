@@ -12,10 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class DetailActivityViewModel(private val repository: IItemRepository,
-                              private val connectivityModule: ConnectivityModule) : ViewModel() {
-
-    private val compositeDisposable by lazy { CompositeDisposable() }
+class DetailActivityViewModel(private val repository: IItemRepository) : DAViewModel() {
 
     val itemLiveData: MutableLiveData<LiveDataWrapper<ItemEntity, Exception>> by lazy {
         MutableLiveData<LiveDataWrapper<ItemEntity, Exception>>()
@@ -59,10 +56,5 @@ class DetailActivityViewModel(private val repository: IItemRepository,
             })
 
         compositeDisposable.add(disposable)
-    }
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
     }
 }

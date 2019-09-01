@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
@@ -22,14 +21,13 @@ import com.sai.diagonalley.module.SharedPreferencesModule
 import com.sai.diagonalley.viewmodel.MainActivityViewModel
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
 import com.sai.diagonalley.viewmodel.livedata.ResourceStatus
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DAActivity() {
 
     val viewmodel: MainActivityViewModel by viewModel()
 
@@ -39,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     private val categoryList = mutableListOf<CategoryEntity>()
     private val categoryAdapter = CategoryAdapter(this, categoryList)
 
-    private val compositeDisposable by lazy { CompositeDisposable() }
     private val sharedPreferencesModule: SharedPreferencesModule by inject()
 
     private var filterDialog: AlertDialog? = null
@@ -56,11 +53,6 @@ class MainActivity : AppCompatActivity() {
 
         viewmodel.fetchItems(sharedPreferencesModule.getString(SharedPreferencesModule.spFilterKey,
             SharedPreferencesModule.defaultFilter))
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.clear()
-        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

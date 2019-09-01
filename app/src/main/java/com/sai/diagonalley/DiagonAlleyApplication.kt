@@ -30,7 +30,7 @@ class DiagonAlleyApplication : Application() {
         single<IItemRepository> {ItemRepository(get(), get())}
 
         viewModel { MainActivityViewModel(get(), get()) }
-        viewModel { DetailActivityViewModel(get(), get()) }
+        viewModel { DetailActivityViewModel(get()) }
     }
 
     override fun onCreate() {

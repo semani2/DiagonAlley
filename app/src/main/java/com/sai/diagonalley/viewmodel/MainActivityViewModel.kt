@@ -21,9 +21,9 @@ import kotlin.Exception
  * @see MainActivity
  */
 class MainActivityViewModel(private val repository: IItemRepository,
-                            private val connectivityModule: ConnectivityModule) : ViewModel() {
+                            private val connectivityModule: ConnectivityModule) : DAViewModel() {
 
-    private val compositeDisposable by lazy { CompositeDisposable() }
+
 
     val itemLiveData: MutableLiveData<LiveDataWrapper<List<ItemEntity>, Exception>> by lazy {
         MutableLiveData<LiveDataWrapper<List<ItemEntity>, Exception>>()
@@ -113,10 +113,5 @@ class MainActivityViewModel(private val repository: IItemRepository,
             .subscribe()
 
         compositeDisposable.add(disposable)
-    }
-
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
     }
 }
