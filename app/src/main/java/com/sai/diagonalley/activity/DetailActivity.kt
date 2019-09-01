@@ -1,11 +1,17 @@
 package com.sai.diagonalley.activity
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.sai.diagonalley.GlideApp
 import com.sai.diagonalley.R
 import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.viewmodel.DetailActivityViewModel
@@ -20,6 +26,7 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         val paramItemId = "${DetailActivity::class.java}.param_item_id"
+        val paramAnimationName = "${DetailActivity::class.java}.animation_name"
     }
 
     private var itemId: String? = null
@@ -30,6 +37,7 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        supportPostponeEnterTransition()
 
         itemId = intent.getStringExtra(paramItemId)
         if (itemId.isNullOrEmpty()) {
@@ -37,6 +45,9 @@ class DetailActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        val imageTransitionName = intent.getStringExtra(paramAnimationName)
+        item_image_view.transitionName = imageTransitionName
 
         initLiveDataObservers()
         viewmodel.fetchItem(itemId!!)
@@ -70,9 +81,31 @@ class DetailActivity : AppCompatActivity() {
                                 getString(R.string.str_item_for_sale_rent)
                             else
                                 getString(R.string.str_item_for_sale)
-                            Glide.with(item_image_view)
+                            GlideApp.with(item_image_view)
                                 .load(item.imageUrl)
                                 .fitCenter()
+                                .listener(object: RequestListener<Drawable> {
+                                    override fun onLoadFailed(
+                                        e: GlideException?,
+                                        model: Any?,
+                                        target: Target<Drawable>?,
+                                        isFirstResource: Boolean
+                                    ): Boolean {
+                                        supportStartPostponedEnterTransition()
+                                        return false
+                                    }
+
+                                    override fun onResourceReady(
+                                        resource: Drawable?,
+                                        model: Any?,
+                                        target: Target<Drawable>?,
+                                        dataSource: DataSource?,
+                                        isFirstResource: Boolean
+                                    ): Boolean {
+                                        supportStartPostponedEnterTransition()
+                                        return false
+                                    }
+                                })
                                 .into(item_image_view)
 
                             if (item.isForRent) {

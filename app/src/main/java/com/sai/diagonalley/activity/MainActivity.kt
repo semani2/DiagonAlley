@@ -9,6 +9,8 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sai.diagonalley.R
@@ -26,7 +28,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -154,15 +155,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun initItemClick() {
         val disposable = itemAdapter.getClickEvent()
-            .subscribeWith(object: DisposableObserver<ItemEntity>() {
+            .subscribeWith(object: DisposableObserver<ItemAdapter.ItemImageData>() {
                 override fun onComplete() {
                     /* no op */
                 }
 
-                override fun onNext(item: ItemEntity) {
+                override fun onNext(itemData: ItemAdapter.ItemImageData) {
                     val intent = Intent(this@MainActivity, DetailActivity::class.java)
-                    intent.putExtra(DetailActivity.paramItemId, item.id)
-                    startActivity(intent)
+                    intent.putExtra(DetailActivity.paramItemId, itemData.item.id)
+                    intent.putExtra(DetailActivity.paramAnimationName, ViewCompat.getTransitionName(itemData.imageView))
+                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        this@MainActivity,
+                        itemData.imageView,
+                        ViewCompat.getTransitionName(itemData.imageView)!!
+                    )
+
+                    startActivity(intent, options.toBundle())
                 }
 
                 override fun onError(e: Throwable) {
