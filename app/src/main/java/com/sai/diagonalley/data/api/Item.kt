@@ -1,4 +1,4 @@
-package com.sai.diagonalley.data
+package com.sai.diagonalley.data.api
 
 /**
  * Data Class representing the Item API Model
