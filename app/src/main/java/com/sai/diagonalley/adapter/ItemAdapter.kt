@@ -43,32 +43,16 @@ class ItemAdapter(private val list: List<ItemEntity>) : RecyclerView.Adapter<Ite
         private var itemNameTextView = itemView.findViewById<TextView>(R.id.item_name_text_view)
         private var itemPriceTextView = itemView.findViewById<TextView>(R.id.item_price_text_view)
         private var itemImageView = itemView.findViewById<ImageView>(R.id.item_image_view)
+        private var itemCategoryTextView = itemView.findViewById<TextView>(R.id.item_category_text_view)
 
         fun bind(item: ItemEntity) {
             itemNameTextView.text = item.displayName
             itemPriceTextView.text = "${item.purchaseCost} to buy"
+            itemCategoryTextView.text = item.category
             Glide.with(itemImageView)
                 .asBitmap()
                 .load(item.imageUrl)
-                .fitCenter()
-                .into(object : CustomTarget<Bitmap>(){
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        itemImageView.setImageBitmap(resource)
-
-                        Palette.from(resource).generate { palette ->
-                            val darkVibrant = palette?.darkVibrantSwatch
-                            if (darkVibrant != null) {
-                                itemCardView.setCardBackgroundColor(darkVibrant.rgb)
-                            } else {
-                                itemCardView.setCardBackgroundColor(parent.context.resources
-                                    .getColor(R.color.colorItemBgDef))
-                            }
-                        }
-                    }
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        /* no op */
-                    }
-                })
+                .into(itemImageView)
 
             itemCardView.setOnClickListener { clickSubject.onNext(item) }
         }

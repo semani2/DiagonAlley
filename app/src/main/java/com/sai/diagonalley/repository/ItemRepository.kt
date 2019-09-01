@@ -29,7 +29,7 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
         return if (useOnlyCache)
             getItemsFromDb()
         else
-            getItemsFromDb()
+            getItemsFromApi()
     }
 
     /**
