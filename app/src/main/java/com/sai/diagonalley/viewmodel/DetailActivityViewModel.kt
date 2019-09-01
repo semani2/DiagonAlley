@@ -3,6 +3,7 @@ package com.sai.diagonalley.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sai.diagonalley.data.db.ItemEntity
+import com.sai.diagonalley.module.ConnectivityModule
 import com.sai.diagonalley.repository.IItemRepository
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
 import com.sai.diagonalley.viewmodel.livedata.ResourceStatus
@@ -11,7 +12,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class DetailActivityViewModel(private val repository: IItemRepository) : ViewModel() {
+class DetailActivityViewModel(private val repository: IItemRepository,
+                              private val connectivityModule: ConnectivityModule) : ViewModel() {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
 

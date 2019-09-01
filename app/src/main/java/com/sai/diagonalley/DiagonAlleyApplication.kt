@@ -2,6 +2,7 @@ package com.sai.diagonalley
 
 import android.app.Application
 import com.sai.diagonalley.module.ApiModule
+import com.sai.diagonalley.module.ConnectivityModule
 import com.sai.diagonalley.module.DbModule
 import com.sai.diagonalley.repository.IItemRepository
 import com.sai.diagonalley.repository.ItemRepository
@@ -22,10 +23,11 @@ class DiagonAlleyApplication : Application() {
     private var moduleList = module {
         single { ApiModule(this@DiagonAlleyApplication) }
         single { DbModule(this@DiagonAlleyApplication) }
+        single { ConnectivityModule(this@DiagonAlleyApplication) }
         single<IItemRepository> {ItemRepository(get(), get())}
 
-        viewModel { MainActivityViewModel(get()) }
-        viewModel { DetailActivityViewModel(get()) }
+        viewModel { MainActivityViewModel(get(), get()) }
+        viewModel { DetailActivityViewModel(get(), get()) }
     }
 
     override fun onCreate() {

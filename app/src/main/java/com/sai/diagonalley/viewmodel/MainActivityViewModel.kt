@@ -3,6 +3,7 @@ package com.sai.diagonalley.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sai.diagonalley.data.db.ItemEntity
+import com.sai.diagonalley.module.ConnectivityModule
 import com.sai.diagonalley.repository.IItemRepository
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
 import com.sai.diagonalley.viewmodel.livedata.ResourceStatus
@@ -18,7 +19,8 @@ import kotlin.Exception
  *
  * @see MainActivity
  */
-class MainActivityViewModel(private val repository: IItemRepository) : ViewModel() {
+class MainActivityViewModel(private val repository: IItemRepository,
+                            private val connectivityModule: ConnectivityModule) : ViewModel() {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
 
@@ -41,7 +43,7 @@ class MainActivityViewModel(private val repository: IItemRepository) : ViewModel
             null
         )
 
-        val disposable = repository.getItems(false)
+        val disposable = repository.getItems(!connectivityModule.isNetworkAvailable(), category)
             .delay(2, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
