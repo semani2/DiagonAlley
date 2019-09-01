@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.sai.diagonalley.R
 import com.sai.diagonalley.data.db.ItemEntity
 import io.reactivex.subjects.PublishSubject
@@ -35,12 +36,15 @@ class ItemAdapter(private val list: List<ItemEntity>) : RecyclerView.Adapter<Ite
         private var itemCardView = itemView.findViewById<CardView>(R.id.item_layout)
         private var itemNameTextView = itemView.findViewById<TextView>(R.id.item_name_text_view)
         private var itemPriceTextView = itemView.findViewById<TextView>(R.id.item_price_text_view)
-        private var itemImageTextView = itemView.findViewById<ImageView>(R.id.item_image_view)
+        private var itemImageView = itemView.findViewById<ImageView>(R.id.item_image_view)
 
         fun bind(item: ItemEntity) {
             itemNameTextView.text = item.displayName
             itemPriceTextView.text = "${item.purchaseCost} to buy"
-
+            Glide.with(itemImageView)
+                .load(item.imageUrl)
+                .fitCenter()
+                .into(itemImageView)
 
             itemCardView.setOnClickListener { clickSubject.onNext(item) }
         }
