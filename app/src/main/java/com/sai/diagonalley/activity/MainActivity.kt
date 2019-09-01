@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+
 class MainActivity : AppCompatActivity() {
 
     val viewmodel: MainActivityViewModel by viewModel()
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         item_recycler_view.apply {
-            layoutManager = GridLayoutManager(this@MainActivity, 2)
+            layoutManager = GridLayoutManager(this@MainActivity, calculateNumColumns())
             adapter = itemAdapter
         }
     }
@@ -84,5 +85,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun toggleBusy(isBusy: Boolean) {
         progressBar.visibility = if (isBusy) View.VISIBLE else View.GONE
+    }
+
+    private fun calculateNumColumns() : Int {
+        val displayMetrics = resources.displayMetrics
+        val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
+        return (screenWidthDp / 180 + 0.5).toInt()
     }
 }

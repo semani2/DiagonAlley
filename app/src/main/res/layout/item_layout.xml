@@ -5,11 +5,10 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/item_layout"
         android:orientation="vertical"
-        android:layout_marginStart="@dimen/common_5dp"
-        android:layout_marginEnd="@dimen/common_5dp"
-        android:layout_marginTop="@dimen/common_5dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp"
+        android:layout_marginStart="@dimen/common_16dp"
+        android:layout_marginTop="@dimen/common_16dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="5dp"
         android:layout_width="@dimen/item_card_width"
         android:layout_height="@dimen/item_card_height">
 
@@ -34,7 +33,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/item_image_view"
-                android:background="@color/colorItemBgDef">
+                android:background="@color/colorPrimary">
 
             <TextView
                     android:id="@+id/item_name_text_view"
@@ -50,6 +49,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:textStyle="bold"
                     tools:ellipsize="end"
                     tools:text="Yew Unicorn" />
 
@@ -64,6 +64,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/item_name_text_view"
                     android:textColor="@android:color/white"
+                    android:textSize="12sp"
                     tools:text="25 G to buy" />
 
             <TextView
@@ -71,7 +72,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="3dp"
                     android:layout_marginEnd="8dp"
                     tools:text="book"
                     android:textStyle="italic"
