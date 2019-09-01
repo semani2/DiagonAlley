@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:background="@android:color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/item_image_view"
+                android:layout_width="250dp"
+                android:layout_height="0dp"
+                android:paddingTop="@dimen/common_16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars[0]" />
+
+        <TextView
+                android:id="@+id/item_name_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/item_image_view"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Elder Wand" />
+
+        <TextView
+                android:id="@+id/item_description_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:lineSpacingExtra="3.1dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/item_image_view"
+                app:layout_constraintTop_toBottomOf="@+id/item_available_text_view"
+                tools:text="The Elder Wand is one of three objects that make up the fabled Deathly Hallows. The wand is made of elder wood and contains a Thestral tail-hair core. It is said to be the most powerful wand that has ever existed, able to perform feats of magic that would normally be impossible even for the most skilled wizards, such as mending another wand damaged beyond normal magical repair." />
+
+        <TextView
+                android:id="@+id/item_available_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/item_name_text_view"
+                app:layout_constraintHorizontal_bias="0.503"
+                app:layout_constraintStart_toStartOf="@+id/item_name_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/item_name_text_view"
+                tools:text="Available for purchase and rent" />
+
+        <Button
+                android:id="@+id/item_purchase_button"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@color/colorPrimary"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/item_rent_button"
+                app:layout_constraintTop_toBottomOf="@+id/item_description_text_view"
+                tools:text="Buy for 750 Ga" />
+
+        <Button
+                android:id="@+id/item_rent_button"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@color/colorPrimary"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@+id/item_purchase_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/item_image_view"
+                app:layout_constraintTop_toBottomOf="@+id/item_description_text_view"
+                tools:text="Rent for 40 Ga/year" />
+
+        <ProgressBar
+                android:id="@+id/detail_progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/item_image_view" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+
