@@ -8,6 +8,8 @@
     <string name="str_filter">Filter</string>
     <string name="str_apply">Apply</string>
     <string name="str_select_category">Select Category</string>
+    <string name="str_empty_list_no_network">Blimey! We could not fetch any data, please check you network connection and try again.</string>
+    <string name="str_empty_list">Blimey! We could not fetch any data, please try again.</string>
 
     <!-- Detail Activity -->
     <string name="str_rent_button">%1$.2f Ga to rent</string>

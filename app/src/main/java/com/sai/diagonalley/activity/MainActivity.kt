@@ -17,6 +17,7 @@ import com.sai.diagonalley.adapter.CategoryAdapter
 import com.sai.diagonalley.adapter.ItemAdapter
 import com.sai.diagonalley.data.db.CategoryEntity
 import com.sai.diagonalley.data.db.ItemEntity
+import com.sai.diagonalley.module.ConnectivityModule
 import com.sai.diagonalley.module.SharedPreferencesModule
 import com.sai.diagonalley.viewmodel.MainActivityViewModel
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
@@ -38,6 +39,7 @@ class MainActivity : DAActivity() {
     private val categoryAdapter = CategoryAdapter(this, categoryList)
 
     private val sharedPreferencesModule: SharedPreferencesModule by inject()
+    private val connetivityModule: ConnectivityModule by inject()
 
     private var filterDialog: AlertDialog? = null
 
@@ -83,14 +85,25 @@ class MainActivity : DAActivity() {
                         toggleBusy(false)
                         Timber.e(livedataWrapper.exception, "Error fetching items")
                         Toast.makeText(this, "Error fetching items", Toast.LENGTH_LONG).show()
+
+                        displayItemsError()
                     }
 
                     ResourceStatus.SUCCESS -> {
                         toggleBusy(false)
 
+                        if (livedataWrapper.data.isNullOrEmpty()) {
+                            displayItemsError()
+                            return@Observer
+                        }
+
                         itemList.clear()
                         itemList.addAll(livedataWrapper.data!!)
                         itemAdapter.notifyDataSetChanged()
+
+                        item_recycler_view.visibility = View.VISIBLE
+                        empty_list_text_view.visibility = View.GONE
+                        empty_list_image_view.visibility = View.GONE
 
                         item_recycler_view.smoothScrollToPosition(0)
                     }
@@ -134,6 +147,15 @@ class MainActivity : DAActivity() {
                     }
                 }
             })
+    }
+
+    private fun displayItemsError() {
+        item_recycler_view.visibility = View.GONE
+        empty_list_image_view.visibility = View.VISIBLE
+        if (!connetivityModule.isNetworkAvailable()) {
+            empty_list_text_view.text = getString(R.string.str_empty_list_no_network)
+        }
+        empty_list_text_view.visibility = View.VISIBLE
     }
 
     /* Section - UI Helpers */
