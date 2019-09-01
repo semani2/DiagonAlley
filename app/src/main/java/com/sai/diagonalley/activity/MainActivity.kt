@@ -1,9 +1,10 @@
 package com.sai.diagonalley.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.sai.diagonalley.R
@@ -13,6 +14,7 @@ import com.sai.diagonalley.viewmodel.MainActivityViewModel
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
 import com.sai.diagonalley.viewmodel.livedata.ResourceStatus
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableObserver
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -30,8 +32,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        Toast.makeText(this, getString(R.string.str_welcome), Toast.LENGTH_SHORT).show()
 
         initRecyclerView()
         initItemClick()
@@ -80,7 +80,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initItemClick() {
+        val disposable = itemAdapter.getClickEvent()
+            .subscribeWith(object: DisposableObserver<ItemEntity>() {
+                override fun onComplete() {
+                    /* no op */
+                }
 
+                override fun onNext(item: ItemEntity) {
+                    val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                    intent.putExtra(DetailActivity.paramItemId, item.id)
+                    startActivity(intent)
+                }
+
+                override fun onError(e: Throwable) {
+                    /* no op */
+                }
+
+            })
+
+        compositeDisposable.add(disposable)
     }
 
     private fun toggleBusy(isBusy: Boolean) {

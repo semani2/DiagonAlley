@@ -81,6 +81,7 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
                     )
                     itemEntityList.add(itemEntity)
                 }
+                dbModule.getItemDatabase().itemDao().insertAllTodos(itemEntityList)
                 Single.just(itemEntityList)
             }
     }

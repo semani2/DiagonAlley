@@ -10,46 +10,39 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
-import kotlin.Exception
 
-/**
- * ViewModel for the MainActivity
- *
- * @see MainActivity
- */
-class MainActivityViewModel(private val repository: IItemRepository) : ViewModel() {
+class DetailActivityViewModel(private val repository: IItemRepository) : ViewModel() {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
 
-    val itemLiveData: MutableLiveData<LiveDataWrapper<List<ItemEntity>, Exception>> by lazy {
-        MutableLiveData<LiveDataWrapper<List<ItemEntity>, Exception>>()
+    val itemLiveData: MutableLiveData<LiveDataWrapper<ItemEntity, Exception>> by lazy {
+        MutableLiveData<LiveDataWrapper<ItemEntity, Exception>>()
     }
 
-    private var filterCategory: String? = null
-
-    fun fetchItems(category: String? = null) {
-        if (category.equals(filterCategory, true) && itemLiveData.value != null) {
-            return
-        }
-
-        filterCategory = category
-
+    fun fetchItem(id: String) {
         itemLiveData.value = LiveDataWrapper(
             ResourceStatus.LOADING,
             null,
             null
         )
 
-        val disposable = repository.getItems(false)
-            .delay(2, TimeUnit.SECONDS)
+        val disposable = repository.getItemById(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableSingleObserver<List<ItemEntity>>() {
                 override fun onSuccess(data: List<ItemEntity>) {
+                    if (data.isEmpty() || data.size > 1) {
+                        itemLiveData.value = LiveDataWrapper(
+                            ResourceStatus.ERROR,
+                            null,
+                            Exception("Error fetching item with id $id")
+                        )
+                        return
+                    }
+
                     itemLiveData.value = LiveDataWrapper(
                         ResourceStatus.SUCCESS,
-                        data,
+                        data[0],
                         null
                     )
                 }
@@ -61,7 +54,6 @@ class MainActivityViewModel(private val repository: IItemRepository) : ViewModel
                         Exception(e.localizedMessage)
                     )
                 }
-
             })
 
         compositeDisposable.add(disposable)

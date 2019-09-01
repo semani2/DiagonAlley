@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sai.diagonalley.R
 import com.sai.diagonalley.data.db.ItemEntity
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import java.util.*
 
 
 /**
@@ -27,6 +29,8 @@ class ItemAdapter(private val list: List<ItemEntity>) : RecyclerView.Adapter<Ite
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(list[position])
     }
+
+    fun getClickEvent(): Observable<ItemEntity> = clickSubject
 
     /**
      * View Holder for each item in the items recycler view
