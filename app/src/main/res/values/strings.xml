@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Diagon Alley</string>
+
+    <string name="str_welcome">Welcome to Diagon Alley!</string>
 </resources>
