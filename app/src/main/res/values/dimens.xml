@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="common_5dp">5dp</dimen>
+    <dimen name="item_card_width">180dp</dimen>
+    <dimen name="item_card_height">250dp</dimen>
+</resources>
