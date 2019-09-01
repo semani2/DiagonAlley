@@ -4,6 +4,7 @@ import android.app.Application
 import com.sai.diagonalley.module.ApiModule
 import com.sai.diagonalley.module.ConnectivityModule
 import com.sai.diagonalley.module.DbModule
+import com.sai.diagonalley.module.SharedPreferencesModule
 import com.sai.diagonalley.repository.IItemRepository
 import com.sai.diagonalley.repository.ItemRepository
 import com.sai.diagonalley.viewmodel.DetailActivityViewModel
@@ -24,6 +25,8 @@ class DiagonAlleyApplication : Application() {
         single { ApiModule(this@DiagonAlleyApplication) }
         single { DbModule(this@DiagonAlleyApplication) }
         single { ConnectivityModule(this@DiagonAlleyApplication) }
+        single { SharedPreferencesModule(this@DiagonAlleyApplication) }
+
         single<IItemRepository> {ItemRepository(get(), get())}
 
         viewModel { MainActivityViewModel(get(), get()) }

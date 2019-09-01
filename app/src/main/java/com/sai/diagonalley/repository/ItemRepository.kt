@@ -2,11 +2,14 @@ package com.sai.diagonalley.repository
 
 import com.google.gson.Gson
 import com.sai.diagonalley.data.api.Inventory
+import com.sai.diagonalley.data.db.CategoryEntity
 import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.module.ApiModule
 import com.sai.diagonalley.module.DbModule
+import com.sai.diagonalley.module.SharedPreferencesModule
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 /**
  * Implementation of the IItemRepository.
@@ -98,5 +101,71 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
             dbModule.getItemDatabase().itemDao()
                 .getItemsByCategory(category)
         }
+    }
+
+    /**
+     * Function fetch categories
+     *
+     * @param useOnlyCache : Should use only cache
+     *
+     * @return List of Category Entities
+     */
+    override fun getCategories(useOnlyCache: Boolean): Single<List<CategoryEntity>> {
+        return getCategoriesFromDb()
+            .subscribeOn(Schedulers.io())
+            .flatMap { dbList ->
+                if (dbList.isNullOrEmpty()) {
+                    getCategoriesFromApi()
+                } else {
+                    Single.just(dbList)
+                }
+            }
+    }
+
+    /**
+     * Helper method to fetch categories from the API
+     *
+     * @return List of category entity
+     */
+    private fun getCategoriesFromApi(): Single<List<CategoryEntity>> {
+        return Single.fromCallable { apiModule.readInventoryFromFile() }
+            .subscribeOn(Schedulers.io())
+            .flatMap { jsonString ->
+                val inventory = Gson().fromJson(jsonString, Inventory::class.java)
+                val categoryEntityList = mutableListOf<CategoryEntity>()
+
+                for (category in inventory.categories) {
+                    val categoryEntity = CategoryEntity(
+                        category.id,
+                        category.name,
+                        category.type,
+                        false
+                    )
+                    categoryEntityList.add(categoryEntity)
+                }
+                categoryEntityList.add(
+                    0,
+                    CategoryEntity(
+                        UUID.randomUUID().toString(),
+                        "All",
+                        "all",
+                        true
+                    )
+                )
+
+                dbModule.getItemDatabase().categoryDao().deleteAllCategories()
+                dbModule.getItemDatabase().categoryDao().insertAllCategories(categoryEntityList)
+
+                Single.just(categoryEntityList)
+            }
+    }
+
+    /**
+     * Helper method to fetch categories from the db
+     *
+     * @return List of category entity
+     */
+    private fun getCategoriesFromDb(): Single<List<CategoryEntity>> {
+        return dbModule.getItemDatabase().categoryDao().getCategories()
     }
 }

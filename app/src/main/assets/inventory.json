@@ -274,5 +274,22 @@
       "purchaseCost": 1200,
       "rentalCost": 150,
       "currency": "Galleons"
+    }],
+    "categories": [{
+      "id" : "d3511004-a905-4f35-b953-96d06e66204e",
+      "name": "Wands",
+      "type": "wand"
+    }, {
+      "id": "292718ff-a960-4ba8-b137-664b1d66e823",
+      "name": "Cauldrons",
+      "type": "cauldron"
+    }, {
+      "id" : "4fb47133-d813-415c-a257-70eeaf3a3485",
+      "name": "Books",
+      "type": "book"
+    }, {
+      "id" : "bff84533-e305-4539-a3b9-902eac7dc4e2",
+      "name": "Brooms",
+      "type": "broom"
     }]
 }

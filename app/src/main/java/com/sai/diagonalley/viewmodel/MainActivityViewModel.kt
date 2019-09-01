@@ -2,6 +2,7 @@ package com.sai.diagonalley.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.sai.diagonalley.data.db.CategoryEntity
 import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.module.ConnectivityModule
 import com.sai.diagonalley.repository.IItemRepository
@@ -26,6 +27,10 @@ class MainActivityViewModel(private val repository: IItemRepository,
 
     val itemLiveData: MutableLiveData<LiveDataWrapper<List<ItemEntity>, Exception>> by lazy {
         MutableLiveData<LiveDataWrapper<List<ItemEntity>, Exception>>()
+    }
+
+    val categoryLiveData: MutableLiveData<LiveDataWrapper<List<CategoryEntity>, Exception>> by lazy {
+        MutableLiveData<LiveDataWrapper<List<CategoryEntity>, Exception>>()
     }
 
     private var filterCategory: String? = null
@@ -64,6 +69,37 @@ class MainActivityViewModel(private val repository: IItemRepository,
                     )
                 }
 
+            })
+
+        compositeDisposable.add(disposable)
+    }
+
+    fun fetchCategories() {
+        categoryLiveData.value = LiveDataWrapper(
+            ResourceStatus.LOADING,
+            null,
+            null
+        )
+
+        val disposable = repository.getCategories(!connectivityModule.isNetworkAvailable())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object: DisposableSingleObserver<List<CategoryEntity>>() {
+                override fun onSuccess(data: List<CategoryEntity>) {
+                    categoryLiveData.value = LiveDataWrapper(
+                        ResourceStatus.SUCCESS,
+                        data,
+                        null
+                    )
+                }
+
+                override fun onError(e: Throwable) {
+                    categoryLiveData.value = LiveDataWrapper(
+                        ResourceStatus.ERROR,
+                        null,
+                        Exception(e.localizedMessage)
+                    )
+                }
             })
 
         compositeDisposable.add(disposable)
