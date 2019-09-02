@@ -1,7 +1,6 @@
 package com.sai.diagonalley.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.sai.diagonalley.data.db.CategoryEntity
 import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.module.ConnectivityModule
@@ -9,19 +8,17 @@ import com.sai.diagonalley.repository.IItemRepository
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
 import com.sai.diagonalley.viewmodel.livedata.ResourceStatus
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
-import kotlin.Exception
 
 /**
  * ViewModel for the DAActivity
  *
  * @see DAActivity
  */
-class MainActivityViewModel(private val repository: IItemRepository,
-                            private val connectivityModule: ConnectivityModule) : DAViewModel() {
+class DAActivityViewModel(private val repository: IItemRepository,
+                          private val connectivityModule: ConnectivityModule) : DAViewModel() {
 
 
 
@@ -96,7 +93,7 @@ class MainActivityViewModel(private val repository: IItemRepository,
             null
         )
 
-        val disposable = repository.getCategories(!connectivityModule.isNetworkAvailable())
+        val disposable = repository.getCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableSingleObserver<List<CategoryEntity>>() {

@@ -19,7 +19,7 @@ import com.sai.diagonalley.data.db.CategoryEntity
 import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.module.ConnectivityModule
 import com.sai.diagonalley.module.SharedPreferencesModule
-import com.sai.diagonalley.viewmodel.MainActivityViewModel
+import com.sai.diagonalley.viewmodel.DAActivityViewModel
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
 import com.sai.diagonalley.viewmodel.livedata.ResourceStatus
 import io.reactivex.observers.DisposableObserver
@@ -30,7 +30,7 @@ import timber.log.Timber
 
 class DAActivity : BaseActivity() {
 
-    val viewmodel: MainActivityViewModel by viewModel()
+    val viewmodel: DAActivityViewModel by viewModel()
 
     private val itemList = mutableListOf<ItemEntity>()
     private val itemAdapter = ItemAdapter(itemList)

@@ -8,7 +8,7 @@ import com.sai.diagonalley.module.SharedPreferencesModule
 import com.sai.diagonalley.repository.IItemRepository
 import com.sai.diagonalley.repository.ItemRepository
 import com.sai.diagonalley.viewmodel.DetailActivityViewModel
-import com.sai.diagonalley.viewmodel.MainActivityViewModel
+import com.sai.diagonalley.viewmodel.DAActivityViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
@@ -29,7 +29,7 @@ class DiagonAlleyApplication : Application() {
 
         single<IItemRepository> {ItemRepository(get(), get())}
 
-        viewModel { MainActivityViewModel(get(), get()) }
+        viewModel { DAActivityViewModel(get(), get()) }
         viewModel { DetailActivityViewModel(get()) }
     }
 

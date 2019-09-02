@@ -109,11 +109,9 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
     /**
      * Function fetch categories
      *
-     * @param useOnlyCache : Should use only cache
-     *
      * @return List of Category Entities
      */
-    override fun getCategories(useOnlyCache: Boolean): Single<List<CategoryEntity>> {
+    override fun getCategories(): Single<List<CategoryEntity>> {
         return getCategoriesFromDb()
             .subscribeOn(Schedulers.io())
             .flatMap { dbList ->

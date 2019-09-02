@@ -9,9 +9,9 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.sai.diagonalley.GlideApp
 import com.sai.diagonalley.R
 import com.sai.diagonalley.data.db.ItemEntity
+import com.sai.diagonalley.glide.GlideApp
 import com.sai.diagonalley.viewmodel.DetailActivityViewModel
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
 import com.sai.diagonalley.viewmodel.livedata.ResourceStatus

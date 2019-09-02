@@ -11,7 +11,7 @@ interface IItemRepository {
 
     fun getItemById(id: String): Single<List<ItemEntity>>
 
-    fun getCategories(useOnlyCache: Boolean): Single<List<CategoryEntity>>
+    fun getCategories(): Single<List<CategoryEntity>>
 
     fun updateCategory(categories: List<CategoryEntity>): Completable
 }

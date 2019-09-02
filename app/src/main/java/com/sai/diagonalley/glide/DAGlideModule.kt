@@ -1,4 +1,4 @@
-package com.sai.diagonalley
+package com.sai.diagonalley.glide
 
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule
