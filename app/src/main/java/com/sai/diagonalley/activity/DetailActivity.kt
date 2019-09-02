@@ -42,8 +42,10 @@ class DetailActivity : DAActivity() {
             return
         }
 
-        val imageTransitionName = intent.getStringExtra(paramAnimationName)
-        item_image_view.transitionName = imageTransitionName
+        if (intent.hasExtra(paramAnimationName)) {
+            val imageTransitionName = intent.getStringExtra(paramAnimationName)
+            item_image_view.transitionName = imageTransitionName
+        }
 
         initLiveDataObservers()
         viewmodel.fetchItem(itemId as String)

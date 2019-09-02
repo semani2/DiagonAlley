@@ -1,8 +1,10 @@
 package com.sai.diagonalley
 
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
@@ -13,10 +15,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+private const val PACKAGE_NAME = "com.sai.diagonalley"
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest {
+class MainActivity2Test {
 
     @get:Rule
     val activityRule = ActivityTestRule(MainActivity::class.java)
@@ -53,7 +56,8 @@ class MainActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view)).check(
-            RecyclerViewItemCountAssertion(25))
+            RecyclerViewItemCountAssertion(25)
+        )
     }
 
     /**
@@ -94,7 +98,8 @@ class MainActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view)).check(
-            RecyclerViewItemCountAssertion(10))
+            RecyclerViewItemCountAssertion(10)
+        )
 
         // Reset to default category
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
@@ -143,7 +148,8 @@ class MainActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view)).check(
-            RecyclerViewItemCountAssertion(5))
+            RecyclerViewItemCountAssertion(5)
+        )
 
         // Reset to default category
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
@@ -191,7 +197,8 @@ class MainActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view)).check(
-            RecyclerViewItemCountAssertion(5))
+            RecyclerViewItemCountAssertion(5)
+        )
 
         // Reset to default category
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
@@ -239,7 +246,8 @@ class MainActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view)).check(
-            RecyclerViewItemCountAssertion(5))
+            RecyclerViewItemCountAssertion(5)
+        )
 
         // Reset to default category
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
@@ -248,4 +256,29 @@ class MainActivityTest {
 
         Espresso.onView(ViewMatchers.withText("All")).perform(ViewActions.click())
     }
+
+    /**
+     * Tests that an item click triggers an intent for the Detail Activity
+     */
+    @Test
+    fun `test_item_click_triggers_intent`() {
+        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Thread.sleep(2000)
+
+        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(2,
+                    ViewActions.click()
+                ))
+
+        /*intended(allOf(
+            hasComponent(hasShortClassName(".DetailActivity")),
+            toPackage(PACKAGE_NAME)))*/
+    }
 }
+
