@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_detail.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class DetailActivity : DAActivity() {
+class DetailActivity : BaseActivity() {
 
     companion object {
         val paramItemId = "${DetailActivity::class.java}.param_item_id"

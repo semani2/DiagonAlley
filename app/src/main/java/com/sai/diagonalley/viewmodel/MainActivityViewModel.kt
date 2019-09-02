@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit
 import kotlin.Exception
 
 /**
- * ViewModel for the MainActivity
+ * ViewModel for the DAActivity
  *
- * @see MainActivity
+ * @see DAActivity
  */
 class MainActivityViewModel(private val repository: IItemRepository,
                             private val connectivityModule: ConnectivityModule) : DAViewModel() {

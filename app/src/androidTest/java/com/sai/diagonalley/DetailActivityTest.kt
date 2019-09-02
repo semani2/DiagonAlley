@@ -4,7 +4,6 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import com.sai.diagonalley.activity.DetailActivity
-import com.sai.diagonalley.activity.MainActivity
 import org.junit.Rule
 import org.junit.runner.RunWith
 import android.content.Intent
@@ -14,7 +13,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.CoreMatchers.not
-import org.junit.Before
 import org.junit.Test
 
 
