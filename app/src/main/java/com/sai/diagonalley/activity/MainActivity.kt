@@ -12,6 +12,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sai.diagonalley.R
 import com.sai.diagonalley.adapter.CategoryAdapter
 import com.sai.diagonalley.adapter.ItemAdapter
@@ -49,12 +50,19 @@ class MainActivity : DAActivity() {
         setContentView(R.layout.activity_main)
 
         initRecyclerView()
+        initSwipeToRefresh()
         initItemClick()
         initCategoryClickEvent()
         initLiveDataObservers()
 
         viewmodel.fetchItems(sharedPreferencesModule.getString(SharedPreferencesModule.spFilterKey,
             SharedPreferencesModule.defaultFilter))
+    }
+
+    override fun onDestroy() {
+        viewmodel.scrollPosition = (item_recycler_view.layoutManager as GridLayoutManager)
+            .findFirstCompletelyVisibleItemPosition()
+        super.onDestroy()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -82,14 +90,16 @@ class MainActivity : DAActivity() {
                     ResourceStatus.LOADING -> toggleBusy(true)
 
                     ResourceStatus.ERROR -> {
+                        item_swipe_refresh_layout.isRefreshing = false
                         toggleBusy(false)
                         Timber.e(livedataWrapper.exception, "Error fetching items")
-                        Toast.makeText(this, "Error fetching items", Toast.LENGTH_LONG).show()
 
                         displayItemsError()
+                        item_swipe_refresh_layout.isRefreshing = false
                     }
 
                     ResourceStatus.SUCCESS -> {
+                        item_swipe_refresh_layout.isRefreshing = false
                         toggleBusy(false)
 
                         if (livedataWrapper.data.isNullOrEmpty()) {
@@ -98,14 +108,14 @@ class MainActivity : DAActivity() {
                         }
 
                         itemList.clear()
-                        itemList.addAll(livedataWrapper.data!!)
+                        itemList.addAll(livedataWrapper.data)
                         itemAdapter.notifyDataSetChanged()
 
                         item_recycler_view.visibility = View.VISIBLE
                         empty_list_text_view.visibility = View.GONE
                         empty_list_image_view.visibility = View.GONE
 
-                        item_recycler_view.smoothScrollToPosition(0)
+                        item_recycler_view.smoothScrollToPosition(viewmodel.scrollPosition)
                     }
                 }
             })
@@ -164,6 +174,14 @@ class MainActivity : DAActivity() {
         item_recycler_view.apply {
             layoutManager = GridLayoutManager(this@MainActivity, calculateNumColumns())
             adapter = itemAdapter
+        }
+    }
+
+    private fun initSwipeToRefresh() {
+        item_swipe_refresh_layout.setOnRefreshListener {
+            viewmodel.scrollPosition = 0
+            viewmodel.fetchItems(sharedPreferencesModule.getString(SharedPreferencesModule.spFilterKey,
+                SharedPreferencesModule.defaultFilter))
         }
     }
 
@@ -248,6 +266,10 @@ class MainActivity : DAActivity() {
     }
 
     private fun toggleBusy(isBusy: Boolean) {
+        if (item_swipe_refresh_layout.isRefreshing) {
+            return
+        }
+
         progressBar.visibility = if (isBusy) View.VISIBLE else View.GONE
     }
 

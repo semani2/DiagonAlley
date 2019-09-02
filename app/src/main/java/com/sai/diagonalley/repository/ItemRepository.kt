@@ -97,7 +97,7 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
      * @return list of item entity
      */
     private fun getItemsFromDb(category: String?): Single<List<ItemEntity>> {
-        return if (category == null) {
+        return if (category == null || category == "all") {
             dbModule.getItemDatabase().itemDao()
                 .getItems()
         } else {

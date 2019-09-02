@@ -34,9 +34,16 @@ class MainActivityViewModel(private val repository: IItemRepository,
     }
 
     private var filterCategory: String? = null
+    var scrollPosition = 0
 
     fun fetchItems(category: String? = null) {
-        if (category.equals(filterCategory, true) && itemLiveData.value != null) {
+        if (category.equals(filterCategory, true) && itemLiveData.value != null
+            && itemLiveData.value?.status == ResourceStatus.SUCCESS) {
+            itemLiveData.value = LiveDataWrapper(
+                ResourceStatus.SUCCESS,
+                itemLiveData.value?.data,
+                null
+            )
             return
         }
 
@@ -54,6 +61,14 @@ class MainActivityViewModel(private val repository: IItemRepository,
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object: DisposableSingleObserver<List<ItemEntity>>() {
                 override fun onSuccess(data: List<ItemEntity>) {
+                    if (data.isNullOrEmpty()) {
+                        itemLiveData.value = LiveDataWrapper(
+                            ResourceStatus.ERROR,
+                            null,
+                            Exception("Error fetching items")
+                        )
+                        return
+                    }
                     itemLiveData.value = LiveDataWrapper(
                         ResourceStatus.SUCCESS,
                         data,
