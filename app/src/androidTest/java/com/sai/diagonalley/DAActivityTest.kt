@@ -12,17 +12,17 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.truth.content.IntentSubject.assertThat
 import androidx.test.filters.LargeTest
 import androidx.test.runner.AndroidJUnit4
-import com.sai.diagonalley.activity.DetailActivity
+import com.linkedin.android.testbutler.TestButler
 import com.sai.diagonalley.activity.DAActivity
+import com.sai.diagonalley.activity.DetailActivity
 import com.sai.diagonalley.recycleview_helper.RecyclerViewItemCountAssertion
+import org.hamcrest.CoreMatchers.not
+import org.junit.After
 import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
-import com.linkedin.android.testbutler.TestButler
-import org.hamcrest.CoreMatchers.not
-import org.junit.After
 
 
 private const val PACKAGE_NAME = "com.sai.diagonalley"
@@ -32,35 +32,21 @@ private const val PACKAGE_NAME = "com.sai.diagonalley"
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class DAActivityTest {
 
-    /*@get:Rule
-    val activityRule = ActivityTestRule(DAActivity::class.java)*/
-
     @get:Rule
     val intentsTestRule = IntentsTestRule(DAActivity::class.java)
 
     /**
-     * Tests that when there is no network connection the first time the app launches
-     * The user will see the empty list indicators and not the recycler view with items
-     *
-     * Kindly run this test after uninstalling the app
+     * Tests the start state of the application
      */
     @Test
-    fun `test_A_no_network_connection`() {
-        toggleConnectivity(false)
-
+    fun `test_A_start_state`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Thread.sleep(2000)
 
-        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
+        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(not((ViewMatchers.isDisplayed()))))
-
-        Espresso.onView(ViewMatchers.withId(R.id.empty_list_image_view))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Espresso.onView(ViewMatchers.withId(R.id.empty_list_text_view))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     /**
