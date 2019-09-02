@@ -38,13 +38,6 @@ class DAActivityViewModelTest {
     @Mock
     lateinit var connectivityModule: ConnectivityModule
 
-    private var fakeCategory = CategoryEntity(
-        UUID.randomUUID().toString(),
-        "All"
-    ,"all",
-        true
-    )
-
     private var fakeItem = ItemEntity(
         UUID.randomUUID().toString(), "wand","Elder Wand", "desc",
         false, null, "uri", 1000f,

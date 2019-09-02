@@ -1,19 +1,19 @@
 package com.sai.diagonalley
 
-import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
-import com.sai.diagonalley.activity.DetailActivity
-import org.junit.Rule
-import org.junit.runner.RunWith
 import android.content.Intent
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.filters.LargeTest
+import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
+import com.sai.diagonalley.activity.DetailActivity
 import org.hamcrest.CoreMatchers.not
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
 
 @LargeTest

@@ -39,7 +39,7 @@ class DAActivityTest {
      * Tests the start state of the application
      */
     @Test
-    fun `test_A_start_state`() {
+    fun `test_start_state`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
@@ -60,7 +60,7 @@ class DAActivityTest {
      * 5. Number of items in recycler view is 25
      */
     @Test
-    fun `test_B_category_all_items_fetched`() {
+    fun `test_category_all_items_fetched`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
@@ -88,7 +88,7 @@ class DAActivityTest {
      * 9. Verify 10 items are displayed
      */
     @Test
-    fun `test_C_category_wands_items_fetched`() {
+    fun `test_category_wands_items_fetched`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
@@ -138,7 +138,7 @@ class DAActivityTest {
      * 9. Verify 5 items are displayed
      */
     @Test
-    fun `test_D_category_cauldrons_items_fetched`() {
+    fun `test_category_cauldrons_items_fetched`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
@@ -187,7 +187,7 @@ class DAActivityTest {
      * 9. Verify 5 items are displayed
      */
     @Test
-    fun `test_E_category_books_items_fetched`() {
+    fun `test_category_books_items_fetched`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
@@ -236,7 +236,7 @@ class DAActivityTest {
      * 9. Verify 5 items are displayed
      */
     @Test
-    fun `test_F_category_brooms_items_fetched`() {
+    fun `test_category_brooms_items_fetched`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
@@ -274,7 +274,7 @@ class DAActivityTest {
      * Tests that an item click triggers an intent for the Detail Activity
      */
     @Test
-    fun `test_G_item_click_triggers_intent`() {
+    fun `test_item_click_triggers_intent`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
@@ -311,7 +311,7 @@ class DAActivityTest {
      * 4. Recycler view with all items is displayed
      */
     @Test
-    fun `test_H_no_network_connection_items_fetched`() {
+    fun `test_no_network_connection_items_fetched`() {
         toggleConnectivity(false)
 
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
@@ -344,7 +344,7 @@ class DAActivityTest {
      * 9. Verify 5 items are displayed
      */
     @Test
-    fun `test_I_no_network_connection_category_brooms_items_fetched`() {
+    fun `test_no_network_connection_category_brooms_items_fetched`() {
         toggleConnectivity(false)
 
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
