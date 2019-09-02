@@ -36,7 +36,7 @@ class DetailActivity : DAActivity() {
         supportPostponeEnterTransition()
 
         itemId = intent.getStringExtra(paramItemId)
-        if (itemId.isNullOrEmpty()) {
+        if (itemId == null) {
             Timber.d("No item id to display, closing activity!")
             finish()
             return
@@ -46,7 +46,7 @@ class DetailActivity : DAActivity() {
         item_image_view.transitionName = imageTransitionName
 
         initLiveDataObservers()
-        viewmodel.fetchItem(itemId!!)
+        viewmodel.fetchItem(itemId as String)
     }
 
     /* Section - Data */

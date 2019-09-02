@@ -12,8 +12,6 @@ import com.sai.diagonalley.R
 import com.sai.diagonalley.data.db.ItemEntity
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import java.util.*
-
 
 /**
  * Adapter for the recycler view displaying the list of items
@@ -53,7 +51,8 @@ class ItemAdapter(private val list: List<ItemEntity>) : RecyclerView.Adapter<Ite
             else
                 parent.context.getString(R.string.str_item_for_sale)
             itemCategoryTextView.text = item.category
-            ViewCompat.setTransitionName(itemImageView, item.displayName)
+
+            ViewCompat.setTransitionName(itemImageView, item.id)
             Glide.with(itemImageView)
                 .load(item.imageUrl)
                 .fitCenter()

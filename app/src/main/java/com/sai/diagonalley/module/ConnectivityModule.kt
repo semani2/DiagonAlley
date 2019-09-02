@@ -34,8 +34,9 @@ class ConnectivityModule(private val context: Context) {
                 if (activeNetwork != null) {
                     val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
 
-                    return networkCapabilities!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                            || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                    return networkCapabilities != null &&
+                            (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                            || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI))
                 }
             }
         }

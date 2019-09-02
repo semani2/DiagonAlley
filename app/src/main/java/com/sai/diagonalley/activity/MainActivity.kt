@@ -12,7 +12,6 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.sai.diagonalley.R
 import com.sai.diagonalley.adapter.CategoryAdapter
 import com.sai.diagonalley.adapter.ItemAdapter
