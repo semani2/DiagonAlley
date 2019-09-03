@@ -22,6 +22,11 @@ import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import java.util.*
 
+/**
+ * Unit Tests for the ItemRepository
+ *
+ * @see ItemRepository
+ */
 @RunWith(JUnit4::class)
 class ItemRepositoryTest {
 

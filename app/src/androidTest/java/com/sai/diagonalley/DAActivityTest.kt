@@ -18,18 +18,12 @@ import com.sai.diagonalley.activity.DetailActivity
 import com.sai.diagonalley.recycleview_helper.RecyclerViewItemCountAssertion
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
-import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.MethodSorters
-
-
-private const val PACKAGE_NAME = "com.sai.diagonalley"
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class DAActivityTest {
 
     @get:Rule
@@ -43,7 +37,7 @@ class DAActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(not((ViewMatchers.isDisplayed()))))
@@ -56,18 +50,30 @@ class DAActivityTest {
      * 1. Progress bar is displayed
      * 2. Wait for two seconds (fake delay added)
      * 3. Progress bar is not visible any more
-     * 4. Recycler view with all items is displayed
-     * 5. Number of items in recycler view is 25
+     * 4. Click on the menu filter action
+     * 5. Click on the All filter option
+     * 6. Check progress bar is visible
+     * 7. Wait for two seconds
+     * 8. Check progress bar is not visible any more
+     * 9. Verify recycler view is displayed with 25 items
      */
     @Test
     fun `test_category_all_items_fetched`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        resetFilter()
+
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+
+        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view)).check(
             RecyclerViewItemCountAssertion(25)
         )
@@ -92,21 +98,21 @@ class DAActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(1000)
+        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
 
-        Espresso.onView(ViewMatchers.withText("Wands")).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(UITestData.FILTER_WANDS)).perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -114,12 +120,7 @@ class DAActivityTest {
             RecyclerViewItemCountAssertion(10)
         )
 
-        // Reset to default category
-        Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
-
-        Thread.sleep(1000)
-
-        Espresso.onView(ViewMatchers.withText("All")).perform(ViewActions.click())
+        resetFilter()
     }
 
 
@@ -142,21 +143,21 @@ class DAActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(1000)
+        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
 
-        Espresso.onView(ViewMatchers.withText("Cauldrons")).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(UITestData.FILTER_CAULDRONS)).perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -164,12 +165,7 @@ class DAActivityTest {
             RecyclerViewItemCountAssertion(5)
         )
 
-        // Reset to default category
-        Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
-
-        Thread.sleep(1000)
-
-        Espresso.onView(ViewMatchers.withText("All")).perform(ViewActions.click())
+        resetFilter()
     }
 
     /**
@@ -191,21 +187,21 @@ class DAActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(1000)
+        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
 
-        Espresso.onView(ViewMatchers.withText("Books")).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(UITestData.FILTER_BOOKS)).perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -213,12 +209,7 @@ class DAActivityTest {
             RecyclerViewItemCountAssertion(5)
         )
 
-        // Reset to default category
-        Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
-
-        Thread.sleep(1000)
-
-        Espresso.onView(ViewMatchers.withText("All")).perform(ViewActions.click())
+        resetFilter()
     }
 
     /**
@@ -240,21 +231,21 @@ class DAActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(1000)
+        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
 
-        Espresso.onView(ViewMatchers.withText("Brooms")).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(UITestData.FILTER_BROOMS)).perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -262,12 +253,7 @@ class DAActivityTest {
             RecyclerViewItemCountAssertion(5)
         )
 
-        // Reset to default category
-        Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
-
-        Thread.sleep(1000)
-
-        Espresso.onView(ViewMatchers.withText("All")).perform(ViewActions.click())
+        resetFilter()
     }
 
     /**
@@ -278,7 +264,7 @@ class DAActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -290,11 +276,11 @@ class DAActivityTest {
                 ))
 
         val receivedIntent = Iterables.getOnlyElement(Intents.getIntents())
-        assertThat(receivedIntent).hasComponentPackage(PACKAGE_NAME)
+        assertThat(receivedIntent).hasComponentPackage(UITestData.PACKAGE_NAME)
         assertThat(receivedIntent).hasComponentClass(DetailActivity::class.java)
         assertThat(receivedIntent).extras().containsKey(DetailActivity.paramItemId)
         assertThat(receivedIntent).extras().string(DetailActivity.paramItemId)
-            .isEqualTo("5a992056-1b9f-4159-83d7-0405dabf3184")
+            .isEqualTo(UITestData.FIRST_ITEM_ID)
     }
 
     /**
@@ -317,7 +303,7 @@ class DAActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -350,21 +336,21 @@ class DAActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(1000)
+        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
 
-        Espresso.onView(ViewMatchers.withText("Brooms")).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(UITestData.FILTER_BROOMS)).perform(ViewActions.click())
 
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        Thread.sleep(2000)
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -372,12 +358,15 @@ class DAActivityTest {
             RecyclerViewItemCountAssertion(5)
         )
 
-        // Reset to default category
+        resetFilter()
+    }
+
+    private fun resetFilter() {
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(1000)
+        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
 
-        Espresso.onView(ViewMatchers.withText("All")).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText(UITestData.FILTER_ALL)).perform(ViewActions.click())
     }
 
     @After

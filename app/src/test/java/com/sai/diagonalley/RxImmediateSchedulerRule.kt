@@ -7,6 +7,9 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
+/**
+ * Test Rule to specify the Threads for the Rx schedulers
+ */
 class RxImmediateSchedulerRule : TestRule {
 
     override fun apply(base: Statement, d: Description): Statement {
