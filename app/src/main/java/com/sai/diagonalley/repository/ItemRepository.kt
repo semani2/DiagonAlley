@@ -6,7 +6,6 @@ import com.sai.diagonalley.data.db.CategoryEntity
 import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.module.ApiModule
 import com.sai.diagonalley.module.DbModule
-import com.sai.diagonalley.module.SharedPreferencesModule
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -82,7 +81,7 @@ class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRe
                     )
                     itemEntityList.add(itemEntity)
                 }
-                dbModule.getItemDatabase().itemDao().insertAllTodos(itemEntityList)
+                dbModule.getItemDatabase().itemDao().insertAllItems(itemEntityList)
 
                 if (category != null && !category.equals("all", true)) {
                     val filteredList = itemEntityList.filter { it.category == category}

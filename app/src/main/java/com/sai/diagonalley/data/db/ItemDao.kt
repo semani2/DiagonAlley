@@ -19,5 +19,5 @@ interface ItemDao {
     fun getItemsByCategory(category: String): Single<List<ItemEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllTodos(items: List<ItemEntity>)
+    fun insertAllItems(items: List<ItemEntity>)
 }
