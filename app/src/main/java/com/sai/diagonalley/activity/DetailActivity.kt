@@ -19,6 +19,11 @@ import kotlinx.android.synthetic.main.activity_detail.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+/**
+ * The detail activity displays an item in full detail
+ *
+ * ParentActivity: DAActivity
+ */
 class DetailActivity : BaseActivity() {
 
     companion object {
@@ -52,6 +57,10 @@ class DetailActivity : BaseActivity() {
     }
 
     /* Section - Data */
+
+    /**
+     * Initializes the Live Data observers
+     */
     private fun initLiveDataObservers() {
         viewmodel.itemLiveData.observe(this, Observer<LiveDataWrapper<ItemEntity, Exception>> {
                 livedataWrapper ->
@@ -115,6 +124,11 @@ class DetailActivity : BaseActivity() {
     }
 
     /* Section - UI Handling */
+    /**
+     * Helper method to toggle the progress bar's visibility
+     *
+     * @param isBusy: Boolean flag indicating whether or not the progress bar has to be displayed
+     */
     private fun toggleProgress(isBusy: Boolean) {
         detail_progress_bar.visibility = if (isBusy) View.VISIBLE else View.GONE
     }

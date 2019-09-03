@@ -1,6 +1,5 @@
 package com.sai.diagonalley.activity
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -29,6 +28,10 @@ import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+/**
+ * The launcher activity for the Diagon Alley App
+ * Displays a list of items which are either for rent, purchase or both
+ */
 class DAActivity : BaseActivity() {
 
     val viewmodel: DAActivityViewModel by viewModel()
@@ -82,6 +85,9 @@ class DAActivity : BaseActivity() {
     }
 
     /* Section - Data */
+    /**
+     * Initializes the Live Data observers
+     */
     private fun initLiveDataObservers() {
         viewmodel.itemLiveData.observe(this,
             Observer<LiveDataWrapper<List<ItemEntity>, Exception>> {
@@ -153,7 +159,7 @@ class DAActivity : BaseActivity() {
 
                         categoryList.clear()
                         categoryList.addAll(livedataWrapper.data)
-                        displayFilterDialog(categoryList)
+                        displayFilterDialog()
                     }
                 }
             })
@@ -170,6 +176,9 @@ class DAActivity : BaseActivity() {
 
     /* Section - UI Helpers */
 
+    /**
+     * Initializes the Items Recycler View
+     */
     private fun initRecyclerView() {
         item_recycler_view.apply {
             layoutManager = GridLayoutManager(this@DAActivity, calculateNumColumns())
@@ -177,6 +186,9 @@ class DAActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Initializes the swipe to refresh UI widget
+     */
     private fun initSwipeToRefresh() {
         item_swipe_refresh_layout.setOnRefreshListener {
             viewmodel.scrollPosition = 0
@@ -185,6 +197,9 @@ class DAActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Initializes the listener for the Item click event for the items in the recycler view
+     */
     private fun initItemClick() {
         val disposable = itemAdapter.getClickEvent()
             .subscribeWith(object: DisposableObserver<ItemAdapter.ItemImageData>() {
@@ -214,6 +229,9 @@ class DAActivity : BaseActivity() {
         compositeDisposable.add(disposable)
     }
 
+    /**
+     * Initializes the listener for the click event for categories dialog
+     */
     private fun initCategoryClickEvent() {
         val disposable = categoryAdapter.getClickEvent()
             .subscribeWith(object: DisposableObserver<List<CategoryEntity>>() {
@@ -247,10 +265,13 @@ class DAActivity : BaseActivity() {
             return
         }
 
-        displayFilterDialog(categoryList)
+        displayFilterDialog()
     }
 
-    private fun displayFilterDialog(list: List<CategoryEntity>) {
+    /**
+     * Displays the categories dialog for the user to choose
+     */
+    private fun displayFilterDialog() {
         val dialogBuilder = AlertDialog.Builder(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_filter, null)
         dialogBuilder.setView(dialogView)
@@ -265,6 +286,11 @@ class DAActivity : BaseActivity() {
         filterDialog?.show()
     }
 
+    /**
+     * Helper method to toggle the progress bar's visibility
+     *
+     * @param isBusy: Boolean flag indicating whether or not the progress bar has to be displayed
+     */
     private fun toggleBusy(isBusy: Boolean) {
         if (item_swipe_refresh_layout.isRefreshing) {
             return
@@ -273,6 +299,12 @@ class DAActivity : BaseActivity() {
         progressBar.visibility = if (isBusy) View.VISIBLE else View.GONE
     }
 
+    /**
+     * Helper method to calculate the number of columns for the recycler view's grid based on the
+     * screen size and column width
+     *
+     * @return: Number of columns
+     */
     private fun calculateNumColumns() : Int {
         val displayMetrics = resources.displayMetrics
         val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density

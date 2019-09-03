@@ -33,6 +33,11 @@ class DAActivityViewModel(private val repository: IItemRepository,
     private var filterCategory: String? = null
     var scrollPosition = 0
 
+    /**
+     * Method to fetch items from the repository
+     *
+     * @param category: Category to filter items
+     */
     fun fetchItems(category: String? = null) {
         if (category.equals(filterCategory, true) && itemLiveData.value != null
             && itemLiveData.value?.status == ResourceStatus.SUCCESS) {
@@ -86,6 +91,9 @@ class DAActivityViewModel(private val repository: IItemRepository,
         compositeDisposable.add(disposable)
     }
 
+    /**
+     * Method to fetch categories from the repository
+     */
     fun fetchCategories() {
         categoryLiveData.value = LiveDataWrapper(
             ResourceStatus.LOADING,
@@ -119,6 +127,13 @@ class DAActivityViewModel(private val repository: IItemRepository,
         compositeDisposable.add(disposable)
     }
 
+    /**
+     * Method to update the categories using the repository
+     *
+     * @param categories: Updated list of categories
+     *
+     * @see CategoryEntity
+     */
     fun updateCategories(categories: List<CategoryEntity>) {
         val disposable = repository.updateCategory(categories)
             .subscribeOn(Schedulers.io())

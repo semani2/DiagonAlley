@@ -17,6 +17,10 @@ import java.util.*
  *
  * @param apiModule
  * @param dbModule
+ *
+ * @see IItemRepository
+ * @see ApiModule
+ * @see DbModule
  */
 class ItemRepository(val apiModule: ApiModule, val dbModule: DbModule) : IItemRepository {
 
