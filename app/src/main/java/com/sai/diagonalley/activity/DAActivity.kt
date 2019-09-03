@@ -142,6 +142,7 @@ class DAActivity : BaseActivity() {
                             "Could not fetch categories, please try again",
                             Toast.LENGTH_SHORT
                         ).show()
+                        viewmodel.categoryLiveData.value = null
                     }
 
                     ResourceStatus.SUCCESS -> {
@@ -160,6 +161,7 @@ class DAActivity : BaseActivity() {
                         categoryList.clear()
                         categoryList.addAll(livedataWrapper.data)
                         displayFilterDialog()
+                        viewmodel.categoryLiveData.value = null
                     }
                 }
             })

@@ -1,6 +1,7 @@
 package com.sai.diagonalley
 
 import androidx.lifecycle.Observer
+import com.sai.diagonalley.data.db.CategoryEntity
 import com.sai.diagonalley.data.db.ItemEntity
 import com.sai.diagonalley.viewmodel.DAActivityViewModel
 import com.sai.diagonalley.viewmodel.livedata.LiveDataWrapper
@@ -109,6 +110,66 @@ class DAActivityViewModelTest : DAViewModelTest() {
         assertNull(this.viewmodel.itemLiveData.value?.data)
 
         assertEquals(ResourceStatus.ERROR, this.viewmodel.itemLiveData.value?.status)
+    }
+
+    /**
+     * Tests that the category data observer is updated correctly based on the data received
+     * from the repository
+     *
+     * Expected results:
+     * 1. LiveData status = ResourceStatus.Success
+     * 2. LiveData data = not null with size 2
+     * 3. LiveData exception =null
+     */
+    @Test
+    fun `test_fetch_categories_successful`() {
+        val fakeCategories = mutableListOf<CategoryEntity>()
+        fakeCategories.add(fakeCategory1)
+        fakeCategories.add(fakeCategory2)
+
+        Mockito.`when`(this.repository.getCategories())
+            .thenReturn(Single.just(fakeCategories))
+
+        val observer = mock(Observer::class.java) as Observer<LiveDataWrapper<List<CategoryEntity>, Exception>>
+        this.viewmodel.categoryLiveData.observeForever(observer)
+
+        this.viewmodel.fetchCategories()
+
+        assertNotNull(this.viewmodel.categoryLiveData)
+        assertNotNull(this.viewmodel.categoryLiveData.value)
+        assertNull(this.viewmodel.categoryLiveData.value?.exception)
+        assertNotNull(this.viewmodel.categoryLiveData.value?.data)
+        assertEquals(this.viewmodel.categoryLiveData.value?.data?.size, fakeCategories.size)
+        assertEquals(ResourceStatus.SUCCESS, this.viewmodel.categoryLiveData.value?.status)
+    }
+
+    /**
+     * Tests that the category data observer is updated correctly based on the data received
+     * from the repository
+     *
+     * Expected results:
+     * 1. LiveData status = ResourceStatus.Error
+     * 2. LiveData data = null
+     * 3. LiveData exception = Not null
+     */
+    @Test
+    fun `test_fetch_categories_failed_with_exception`() {
+        val exceptionMessage = "Error fetching categories"
+        Mockito.`when`(this.repository.getCategories())
+            .thenReturn(Single.error(Exception(exceptionMessage)))
+
+        val observer = mock(Observer::class.java) as Observer<LiveDataWrapper<List<CategoryEntity>, Exception>>
+        this.viewmodel.categoryLiveData.observeForever(observer)
+
+        this.viewmodel.fetchCategories()
+
+        assertNotNull(this.viewmodel.categoryLiveData)
+        assertNotNull(this.viewmodel.categoryLiveData.value)
+        assertNotNull(this.viewmodel.categoryLiveData.value?.exception)
+        assertNull(this.viewmodel.categoryLiveData.value?.data)
+        assertEquals(this.viewmodel.categoryLiveData.value?.exception?.message, exceptionMessage)
+
+        assertEquals(ResourceStatus.ERROR, this.viewmodel.categoryLiveData.value?.status)
     }
 
 }

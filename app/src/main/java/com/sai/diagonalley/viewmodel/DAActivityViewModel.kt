@@ -38,7 +38,7 @@ class DAActivityViewModel(private val repository: IItemRepository,
      *
      * @param category: Category to filter items
      */
-    fun fetchItems(category: String? = null) {
+    fun fetchItems(category: String?) {
         if (category.equals(filterCategory, true) && itemLiveData.value != null
             && itemLiveData.value?.status == ResourceStatus.SUCCESS) {
             itemLiveData.value = LiveDataWrapper(
@@ -111,7 +111,6 @@ class DAActivityViewModel(private val repository: IItemRepository,
                         data,
                         null
                     )
-                    categoryLiveData.value = null
                 }
 
                 override fun onError(e: Throwable) {
@@ -120,7 +119,6 @@ class DAActivityViewModel(private val repository: IItemRepository,
                         null,
                         Exception(e.localizedMessage)
                     )
-                    categoryLiveData.value = null
                 }
             })
 
