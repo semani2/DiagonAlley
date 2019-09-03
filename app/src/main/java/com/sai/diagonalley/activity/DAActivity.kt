@@ -1,5 +1,6 @@
 package com.sai.diagonalley.activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -275,6 +276,7 @@ class DAActivity : BaseActivity() {
     private fun calculateNumColumns() : Int {
         val displayMetrics = resources.displayMetrics
         val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
-        return (screenWidthDp / 180 + 0.5).toInt()
+        val dimension = resources.getDimensionPixelSize(R.dimen.item_card_width) / displayMetrics.density
+        return (screenWidthDp / dimension).toInt()
     }
 }
