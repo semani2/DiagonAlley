@@ -2,6 +2,7 @@ package com.sai.diagonalley
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -16,7 +17,6 @@ import com.linkedin.android.testbutler.TestButler
 import com.sai.diagonalley.activity.DAActivity
 import com.sai.diagonalley.activity.DetailActivity
 import com.sai.diagonalley.recycleview_helper.RecyclerViewItemCountAssertion
-import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
@@ -27,20 +27,17 @@ import org.junit.runner.RunWith
 class DAActivityTest {
 
     @get:Rule
-    val intentsTestRule = IntentsTestRule(DAActivity::class.java)
+    val intentsTestRule = IntentsTestRule(DAActivity::class.java, false, false)
 
     /**
      * Tests the start state of the application
      */
     @Test
     fun `test_start_state`() {
+        intentsTestRule.launchActivity(null)
+
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
-
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(not((ViewMatchers.isDisplayed()))))
     }
 
     /**
@@ -59,17 +56,13 @@ class DAActivityTest {
      */
     @Test
     fun `test_category_all_items_fetched`() {
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
 
-        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        IdlingRegistry.getInstance().register(idlingResource)
 
         resetFilter()
-
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -95,24 +88,15 @@ class DAActivityTest {
      */
     @Test
     fun `test_category_wands_items_fetched`() {
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
 
-        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        IdlingRegistry.getInstance().register(idlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
-
         Espresso.onView(ViewMatchers.withText(UITestData.FILTER_WANDS)).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -140,24 +124,15 @@ class DAActivityTest {
      */
     @Test
     fun `test_category_cauldrons_items_fetched`() {
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
 
-        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        IdlingRegistry.getInstance().register(idlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
-
         Espresso.onView(ViewMatchers.withText(UITestData.FILTER_CAULDRONS)).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -184,24 +159,15 @@ class DAActivityTest {
      */
     @Test
     fun `test_category_books_items_fetched`() {
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
 
-        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        IdlingRegistry.getInstance().register(idlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
-
         Espresso.onView(ViewMatchers.withText(UITestData.FILTER_BOOKS)).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -228,24 +194,15 @@ class DAActivityTest {
      */
     @Test
     fun `test_category_brooms_items_fetched`() {
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
 
-        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        IdlingRegistry.getInstance().register(idlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
-
         Espresso.onView(ViewMatchers.withText(UITestData.FILTER_BROOMS)).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -262,10 +219,11 @@ class DAActivityTest {
      */
     @Test
     fun `test_item_click_triggers_intent`() {
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
+
+        IdlingRegistry.getInstance().register(idlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -287,10 +245,11 @@ class DAActivityTest {
      */
     @Test
     fun `test_item_click_triggers_intent_with_correct_item_id`() {
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
+
+        IdlingRegistry.getInstance().register(idlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -326,10 +285,11 @@ class DAActivityTest {
     fun `test_no_network_connection_items_fetched`() {
         toggleConnectivity(false)
 
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
+
+        IdlingRegistry.getInstance().register(idlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -359,24 +319,18 @@ class DAActivityTest {
     fun `test_no_network_connection_category_brooms_items_fetched`() {
         toggleConnectivity(false)
 
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        intentsTestRule.launchActivity(null)
 
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+        val idlingResource = intentsTestRule.activity.countingIdlingResource
+
+        IdlingRegistry.getInstance().register(idlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
 
-        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
-
         Espresso.onView(ViewMatchers.withText(UITestData.FILTER_BROOMS)).perform(ViewActions.click())
-
-        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
 
         Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -389,15 +343,13 @@ class DAActivityTest {
 
     private fun resetFilter() {
         Espresso.onView(ViewMatchers.withId(R.id.menu_action_filter)).perform(ViewActions.click())
-
-        Thread.sleep(UITestData.ONE_SECOND_IM_MILLIS)
-
         Espresso.onView(ViewMatchers.withText(UITestData.FILTER_ALL)).perform(ViewActions.click())
     }
 
     @After
     fun teardown() {
         toggleConnectivity(true)
+        IdlingRegistry.getInstance().unregister(intentsTestRule.activity.countingIdlingResource)
     }
 
     private fun toggleConnectivity(enable: Boolean) {

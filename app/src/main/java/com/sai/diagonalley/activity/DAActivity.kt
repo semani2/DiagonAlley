@@ -46,6 +46,7 @@ class DAActivity : BaseActivity() {
     private val sharedPreferencesModule: SharedPreferencesModule by inject()
     private val connetivityModule: ConnectivityModule by inject()
 
+    // Used only for Instrumentation Testing
     val countingIdlingResource = CountingIdlingResource("async_ops")
 
     private var filterDialog: AlertDialog? = null
@@ -154,6 +155,7 @@ class DAActivity : BaseActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         viewmodel.categoryLiveData.value = null
+                        countingIdlingResource.decrement()
                     }
 
                     ResourceStatus.SUCCESS -> {
@@ -173,6 +175,7 @@ class DAActivity : BaseActivity() {
                         categoryList.addAll(livedataWrapper.data)
                         displayFilterDialog()
                         viewmodel.categoryLiveData.value = null
+                        countingIdlingResource.decrement()
                     }
                 }
             })
@@ -274,6 +277,7 @@ class DAActivity : BaseActivity() {
 
     private fun menuFilterClicked() {
         if (categoryList.isNullOrEmpty()) {
+            countingIdlingResource.increment()
             viewmodel.fetchCategories()
             return
         }
