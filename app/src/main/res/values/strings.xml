@@ -14,5 +14,7 @@
     <!-- Detail Activity -->
     <string name="str_rent_button">%1$.2f Ga to rent</string>
     <string name="str_purchase_button">%1$.2f Ga to buy</string>
+    <string name="str_rent_coming_soon">Renting items coming soon to Diagon Alley!</string>
+    <string name="str_purchase_coming_soon">Buying items coming soon to Diagon Alley!</string>
 
 </resources>

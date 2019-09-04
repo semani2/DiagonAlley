@@ -53,6 +53,7 @@ class DetailActivity : BaseActivity() {
         }
 
         initLiveDataObservers()
+        initBuyAndRentButtonClicks()
         viewmodel.fetchItem(itemId as String)
     }
 
@@ -124,6 +125,17 @@ class DetailActivity : BaseActivity() {
     }
 
     /* Section - UI Handling */
+
+    private fun initBuyAndRentButtonClicks() {
+        item_purchase_button.setOnClickListener {
+            showToast(getString(R.string.str_purchase_coming_soon))
+        }
+
+        item_rent_button.setOnClickListener {
+            showToast(getString(R.string.str_rent_coming_soon))
+        }
+    }
+
     /**
      * Helper method to toggle the progress bar's visibility
      *
@@ -131,5 +143,9 @@ class DetailActivity : BaseActivity() {
      */
     private fun toggleProgress(isBusy: Boolean) {
         detail_progress_bar.visibility = if (isBusy) View.VISIBLE else View.GONE
+    }
+
+    private fun showToast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 }

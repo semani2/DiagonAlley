@@ -258,9 +258,35 @@ class DAActivityTest {
 
     /**
      * Tests that an item click triggers an intent for the Detail Activity
+     * on the intent
      */
     @Test
     fun `test_item_click_triggers_intent`() {
+        Espresso.onView(ViewMatchers.withId(R.id.progressBar))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Thread.sleep(UITestData.TWO_SECONDS_IN_MILLIS)
+
+        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        Espresso.onView(ViewMatchers.withId(R.id.item_recycler_view))
+            .perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0,
+                    ViewActions.click()
+                ))
+
+        val receivedIntent = Iterables.getOnlyElement(Intents.getIntents())
+        assertThat(receivedIntent).hasComponentPackage(UITestData.PACKAGE_NAME)
+        assertThat(receivedIntent).hasComponentClass(DetailActivity::class.java)
+    }
+
+    /**
+     * Tests that an item click triggers an intent for the Detail Activity with the right item id
+     * on the intent
+     */
+    @Test
+    fun `test_item_click_triggers_intent_with_correct_item_id`() {
         Espresso.onView(ViewMatchers.withId(R.id.progressBar))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
