@@ -2,20 +2,24 @@ package com.sai.diagonalley
 
 import android.content.Intent
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import com.linkedin.android.testbutler.TestButler
 import com.sai.diagonalley.activity.DetailActivity
+import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -111,6 +115,44 @@ class DetailActivityTest {
             .check(matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.item_rent_button))
             .check(matches(not(ViewMatchers.isDisplayed())))
+    }
+
+    /**
+     * Tests that clicking on the purchase button displays a toast message with the required text
+     */
+    @Test
+    fun `test_purchase_button_clicked_displays_toast`() {
+        val intent = Intent()
+        intent.putExtra(DetailActivity.paramItemId, UITestData.WAND_ITEM_ID)
+        activityRule.launchActivity(intent)
+
+        val activity = activityRule.activity
+
+        Espresso.onView(ViewMatchers.withId(R.id.item_purchase_button))
+            .perform(click())
+
+        onView(withText(R.string.str_purchase_coming_soon))
+            .inRoot(withDecorView(not(`is`(activity.window.decorView))))
+            .check(matches(isDisplayed()))
+    }
+
+    /**
+     * Tests that clicking on the rent button displays a toast message with the required text
+     */
+    @Test
+    fun `test_rent_button_clicked_displays_toast`() {
+        val intent = Intent()
+        intent.putExtra(DetailActivity.paramItemId, UITestData.BOOK_ITEM_ID)
+        activityRule.launchActivity(intent)
+
+        val activity = activityRule.activity
+
+        Espresso.onView(ViewMatchers.withId(R.id.item_rent_button))
+            .perform(click())
+
+        onView(withText(R.string.str_rent_coming_soon))
+            .inRoot(withDecorView(not(`is`(activity.window.decorView))))
+            .check(matches(isDisplayed()))
     }
 
     @After
