@@ -1,5 +1,6 @@
 package com.sai.diagonalley.viewmodel
 
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.sai.diagonalley.data.db.CategoryEntity
 import com.sai.diagonalley.data.db.ItemEntity
@@ -20,8 +21,6 @@ import java.util.concurrent.TimeUnit
 class DAActivityViewModel(private val repository: IItemRepository,
                           private val connectivityModule: ConnectivityModule) : DAViewModel() {
 
-
-
     val itemLiveData: MutableLiveData<LiveDataWrapper<List<ItemEntity>, Exception>> by lazy {
         MutableLiveData<LiveDataWrapper<List<ItemEntity>, Exception>>()
     }
@@ -38,8 +37,8 @@ class DAActivityViewModel(private val repository: IItemRepository,
      *
      * @param category: Category to filter items
      */
-    fun fetchItems(category: String?) {
-        if (category.equals(filterCategory, true) && itemLiveData.value != null
+    fun fetchItems(category: String?, forceRefresh: Boolean = false) {
+        if (!forceRefresh && category.equals(filterCategory, true) && itemLiveData.value != null
             && itemLiveData.value?.status == ResourceStatus.SUCCESS) {
             itemLiveData.value = LiveDataWrapper(
                 ResourceStatus.SUCCESS,
@@ -57,7 +56,8 @@ class DAActivityViewModel(private val repository: IItemRepository,
             null
         )
 
-        val disposable = repository.getItems(!connectivityModule.isNetworkAvailable(), category)
+        val networkAvailable = connectivityModule.isNetworkAvailable()
+        val disposable = repository.getItems(!networkAvailable, category)
             .delay(2, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

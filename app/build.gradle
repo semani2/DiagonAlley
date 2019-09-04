@@ -29,6 +29,9 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    }
 }
 
 dependencies {
@@ -74,6 +77,9 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     kapt 'androidx.annotation:annotation:1.1.0'
 
+    // Counting Idling Resource
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test.ext:junit:1.1.1'
     testImplementation 'org.robolectric:robolectric:4.0'
@@ -88,5 +94,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
     androidTestImplementation 'com.linkedin.testbutler:test-butler-library:2.0.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
 
 }

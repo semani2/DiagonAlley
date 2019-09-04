@@ -12,6 +12,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.sai.diagonalley.R
 import com.sai.diagonalley.adapter.CategoryAdapter
 import com.sai.diagonalley.adapter.ItemAdapter
@@ -45,6 +46,8 @@ class DAActivity : BaseActivity() {
     private val sharedPreferencesModule: SharedPreferencesModule by inject()
     private val connetivityModule: ConnectivityModule by inject()
 
+    val countingIdlingResource = CountingIdlingResource("async_ops")
+
     private var filterDialog: AlertDialog? = null
 
     /* Section - LifeCycle Methods */
@@ -58,8 +61,8 @@ class DAActivity : BaseActivity() {
         initCategoryClickEvent()
         initLiveDataObservers()
 
-        viewmodel.fetchItems(sharedPreferencesModule.getString(SharedPreferencesModule.spFilterKey,
-            SharedPreferencesModule.defaultFilter))
+        fetchItems(sharedPreferencesModule.getString(SharedPreferencesModule.spFilterKey,
+            SharedPreferencesModule.defaultFilter)!!)
     }
 
     override fun onDestroy() {
@@ -92,37 +95,45 @@ class DAActivity : BaseActivity() {
         viewmodel.itemLiveData.observe(this,
             Observer<LiveDataWrapper<List<ItemEntity>, Exception>> {
                 livedataWrapper ->
-                when (livedataWrapper.status) {
-                    ResourceStatus.LOADING -> toggleBusy(true)
+                try {
+                    when (livedataWrapper.status) {
+                        ResourceStatus.LOADING -> toggleBusy(true)
 
-                    ResourceStatus.ERROR -> {
-                        item_swipe_refresh_layout.isRefreshing = false
-                        toggleBusy(false)
-                        Timber.e(livedataWrapper.exception, "Error fetching items")
+                        ResourceStatus.ERROR -> {
+                            item_swipe_refresh_layout.isRefreshing = false
+                            toggleBusy(false)
+                            Timber.e(livedataWrapper.exception, "Error fetching items")
 
-                        displayItemsError()
-                        item_swipe_refresh_layout.isRefreshing = false
-                    }
-
-                    ResourceStatus.SUCCESS -> {
-                        item_swipe_refresh_layout.isRefreshing = false
-                        toggleBusy(false)
-
-                        if (livedataWrapper.data.isNullOrEmpty()) {
                             displayItemsError()
-                            return@Observer
+                            countingIdlingResource.decrement()
                         }
 
-                        itemList.clear()
-                        itemList.addAll(livedataWrapper.data)
-                        itemAdapter.notifyDataSetChanged()
+                        ResourceStatus.SUCCESS -> {
+                            item_swipe_refresh_layout.isRefreshing = false
+                            toggleBusy(false)
 
-                        item_recycler_view.visibility = View.VISIBLE
-                        empty_list_text_view.visibility = View.GONE
-                        empty_list_image_view.visibility = View.GONE
+                            if (livedataWrapper.data.isNullOrEmpty()) {
+                                displayItemsError()
+                                return@Observer
+                            }
 
-                        item_recycler_view.smoothScrollToPosition(viewmodel.scrollPosition)
+                            itemList.clear()
+                            itemList.addAll(livedataWrapper.data)
+                            itemAdapter.notifyDataSetChanged()
+
+                            item_recycler_view.visibility = View.VISIBLE
+                            empty_list_text_view.visibility = View.GONE
+                            empty_list_image_view.visibility = View.GONE
+
+                            if (viewmodel.scrollPosition != -1) {
+                                item_recycler_view.smoothScrollToPosition(viewmodel.scrollPosition)
+                            }
+                            countingIdlingResource.decrement()
+                        }
                     }
+                }
+                catch (e: Exception) {
+                    Timber.e(e)
                 }
             })
 
@@ -194,8 +205,8 @@ class DAActivity : BaseActivity() {
     private fun initSwipeToRefresh() {
         item_swipe_refresh_layout.setOnRefreshListener {
             viewmodel.scrollPosition = 0
-            viewmodel.fetchItems(sharedPreferencesModule.getString(SharedPreferencesModule.spFilterKey,
-                SharedPreferencesModule.defaultFilter))
+            fetchItems(sharedPreferencesModule.getString(SharedPreferencesModule.spFilterKey,
+                SharedPreferencesModule.defaultFilter)!!, forceRefresh = true)
         }
     }
 
@@ -248,7 +259,7 @@ class DAActivity : BaseActivity() {
                     val category = item.find { it.isSelected }
                     category?.let {
                         sharedPreferencesModule.putString(SharedPreferencesModule.spFilterKey, it.type)
-                        viewmodel.fetchItems(it.type)
+                        fetchItems(it.type)
                     }
                 }
 
@@ -299,6 +310,11 @@ class DAActivity : BaseActivity() {
         }
 
         progressBar.visibility = if (isBusy) View.VISIBLE else View.GONE
+    }
+
+    private fun fetchItems(category: String, forceRefresh: Boolean = false) {
+        countingIdlingResource.increment()
+        viewmodel.fetchItems(category, forceRefresh)
     }
 
     /**
